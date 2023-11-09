@@ -151,6 +151,21 @@ unsigned char check_obstacle_collision(ship *player, space *board) {
 	}
 }
 
+void update_enemies_position (space *board) {
+	enemy *aux;
+	for (int i = 0; i < board->max_y; i++) {
+		for (int j = 0; j < board->max_x; j++) {
+			if (board->map[i][j].entity && board->map[i][j].type == ENEMY) {
+				aux = board->map[i][j].entity;
+				if (aux->x < board->max_x) {
+					aux->x+=10;
+				} else {
+					aux->x--;
+				}
+			}
+		}
+	}
+}
 
 
 int main(int argc, char** argv){
@@ -210,7 +225,8 @@ int main(int argc, char** argv){
 			} else {
 				update_position(player);	
 				check_kill(player, board);
-				check_obstacle_collision(player, board);	
+				check_obstacle_collision(player, board);
+				update_enemies_position(board);	
 				
 				al_draw_tinted_scaled_rotated_bitmap_region(shipIcon, 67, 0, 10, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, player->x, player->y, 5, 5, 0, 0);	
 				draw_enemies(board, shipIcon);
