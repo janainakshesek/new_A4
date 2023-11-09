@@ -94,12 +94,18 @@ void draw_enemies (space *board, ALLEGRO_BITMAP *image) {
 }
 
 void draw_obstacles (space *board, ALLEGRO_BITMAP *image) {
-		for (int i = 0; i < board->max_y; i++) {
+	obstacle *aux;
+	for (int i = 0; i < board->max_y; i++) {
 		for (int j = 0; j < board->max_x; j++) {
 			if (board->map[i][j].entity) {
 				if (board->map[i][j].type == OBSTACLE) { 
-				al_draw_tinted_scaled_rotated_bitmap_region(image, 50, 20, 30, 10, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*130, i*50+50, 5, 5, 0, 0);
-					
+					aux = board->map[i][j].entity;
+					if (aux->life > 7)
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 50, 20, 30, 10, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*130, i*50+50, 5, 5, 0, 0);
+					else if (aux->life <= 7 && aux->life > 5)
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 50, 35, 30, 10, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*130, i*50+50, 5, 5, 0, 0);
+					else if (aux->life <= 5)
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 50, 45, 30, 15, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*130, i*50+50, 5, 5, 0, 0);
 				}
 			}
 		}
