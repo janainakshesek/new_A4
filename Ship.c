@@ -23,13 +23,26 @@ void ship_move(ship *element, char steps, unsigned char trajectory, unsigned sho
 	else if (trajectory == 1){ if ((element->x + steps*SHIP_STEP) + element->side/2 <= max_x) element->x = element->x + steps*SHIP_STEP;}	
 }
 
+int valid (ship *element) {
+	bullet *aux = element->gun->shots;
+
+	while (aux) {
+		if (aux->x == element->x) return 0;
+		aux = (bullet*) aux->next;
+	}
+	return 1;
+}
+
 void ship_shot(ship *element){																														
 	bullet *shot;
 
+	if (!valid(element)) return;
+	else {
     if (element->face == 0) 
 		shot = pistol_shot(element->x, element->y, element->face, element->gun);							
 	if (shot)
 		 element->gun->shots = shot;
+	}
 
 }
 
