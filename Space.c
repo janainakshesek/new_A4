@@ -24,10 +24,18 @@ space* create_board(int max_y, int max_x, int enemy_lines){
 	if (enemy_lines > max_y) return 0;
 	
 	space *board = generate_board(max_y, max_x);
-	for (int i = 0; i < enemy_lines; i++) 
-		for (int j = 0; j < max_x; j++) {
-			add_enemy(board, i, j, 1, 0, i);
-		}
+	for (int j = 0; j < max_x; j++) {
+		add_enemy(board, 0, j, 0, 0, 2);
+	}
+	for (int j = 0; j < max_x; j++) {
+		add_enemy(board, 1, j, 0, 0, 1);
+	}
+	for (int j = 0; j < max_x; j++) {
+		add_enemy(board, 2, j, 0, 0, 0);
+	}
+	for (int j = 0; j < max_x; j++) {
+		add_enemy(board, 3, j, 0, 0, 0);
+	}
     
     addObstacle(1, 8, board);
     addObstacle(4, 8, board);

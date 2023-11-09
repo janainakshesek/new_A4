@@ -74,11 +74,19 @@ void update_position(ship *player){
 }	
 
 void draw_enemies (space *board, ALLEGRO_BITMAP *image) {
+	enemy *aux;
 	for (int i = 0; i < board->max_y; i++) {
 		for (int j = 0; j < board->max_x; j++) {
 			if (board->map[i][j].entity) {
 				if (board->map[i][j].type == ENEMY) { 
-					al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, 15, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50+50, 4, 4, 0, 0);	
+					aux = board->map[i][j].entity;
+					if (aux->type == WEAK) {
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, 15, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50+70, 4.5, 4.5, 0, 0);	
+					} else if (aux->type == INTERMEDIARY) { 
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 18, 15, 10, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50+70, 4.5, 4.5, 0, 0);	
+					} else if (aux->type == STRONG) {
+						al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 35, 15, 15, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50+70, 4.5, 4.5, 0, 0);	
+					}
 				}
 			}
 		}
@@ -125,7 +133,7 @@ unsigned char check_obstacle_collision(ship *player, space *board) {
 						if ((index->x >= ((j*130)-10)) && (index->x <= ((j*130)+100)) && (index->y == (i*50+50))) {
 							index->shoked = 1;
 							o = board->map[i][j].entity;
-							if (o->life < 10) {
+							if (o->life > 0) {
 								o->life--;
 							} else 
 								removeObstacle(j, i, board);
@@ -136,6 +144,8 @@ unsigned char check_obstacle_collision(ship *player, space *board) {
 		}
 	}
 }
+
+
 
 int main(int argc, char** argv){
 	int x = 11;
