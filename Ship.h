@@ -2,7 +2,8 @@
 #define __SHIP__			
 
 #include "Joystick.h"		
-#include "Pistol.h"		
+#include "Pistol.h"	
+#include "Bullet.h"	
 
 #define SHIP_STEP 10																	
 

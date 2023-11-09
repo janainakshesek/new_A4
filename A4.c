@@ -77,7 +77,7 @@ void draw_enemies (space *board, ALLEGRO_BITMAP *image) {
 		for (int j = 0; j < board->max_x; j++) {
 			if (board->map[i][j].entity) {
 				if (board->map[i][j].type == ENEMY) { 
-					al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, 15, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50, 4, 4, 0, 0);	
+					al_draw_tinted_scaled_rotated_bitmap_region(image, 0, 0, 15, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*70+300, i*50+50, 4, 4, 0, 0);	
 				}
 			}
 		}
@@ -90,7 +90,7 @@ unsigned char check_kill(ship *killer, space *board){
 			for (int j = 0; j < board->max_x; j++) {
 				if (board->map[i][j].entity) {
 					if (board->map[i][j].type == ENEMY) {
-						if ((index->x >= ((j*70+300)-20)) && (index->x <= ((j*70+300)+20)) && (index->y == (i*50))) {
+						if ((index->x >= ((j*70+300)-20)) && (index->x <= ((j*70+300)+20)) && (index->y == (i*50+50))) {
 							index->shoked = 1;
 							remove_enemy(board, i, j);
 						}
@@ -101,7 +101,6 @@ unsigned char check_kill(ship *killer, space *board){
 	}
 
 }
-
 
 int main(int argc, char** argv){
 	int x = 11;
@@ -180,7 +179,7 @@ int main(int argc, char** argv){
 			else if (event.keyboard.keycode == 83) joystick_right(player->control);																													
 			else if (event.keyboard.keycode == 84) joystick_up(player->control);																														
 			else if (event.keyboard.keycode == 85) joystick_down(player->control);		
-			else if (event.keyboard.keycode == 3) joystick_fire(player->control);		
+			else if (event.keyboard.keycode == 3) joystick_fire(player->control);	
 			
 		} else if (event.type == 42) break;																																								
 	}
