@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "Space.h"
 #include "Enemy.h"
+#include "Obstacle.h"
 
 #include <allegro5/allegro5.h>														
 #include <allegro5/allegro_font.h>	
@@ -84,6 +85,19 @@ void draw_enemies (space *board, ALLEGRO_BITMAP *image) {
 	}	
 }
 
+void draw_obstacles (space *board, ALLEGRO_BITMAP *image) {
+		for (int i = 0; i < board->max_y; i++) {
+		for (int j = 0; j < board->max_x; j++) {
+			if (board->map[i][j].entity) {
+				if (board->map[i][j].type == OBSTACLE) { 
+				al_draw_tinted_scaled_rotated_bitmap_region(image, 50, 20, 30, 10, al_map_rgba_f(1, 1, 1, 1), 0, 0, j*130, i*50+50, 5, 5, 0, 0);
+					
+				}
+			}
+		}
+	}	
+}
+
 unsigned char check_kill(ship *killer, space *board){					
 	for (bullet *index = killer->gun->shots; index != NULL; index = (bullet*) index->next){
 		for (int i = 0; i < board->max_y; i++) {
@@ -99,7 +113,28 @@ unsigned char check_kill(ship *killer, space *board){
 			}
 		}
 	}
+}
 
+unsigned char check_obstacle_collision(ship *player, space *board) {
+	obstacle *o;
+	for (bullet *index = player->gun->shots; index != NULL; index = (bullet*) index->next){
+		for (int i = 0; i < board->max_y; i++) {
+			for (int j = 0; j < board->max_x; j++) {
+				if (board->map[i][j].entity) {
+					if (board->map[i][j].type == OBSTACLE) {
+						if ((index->x >= ((j*130)-10)) && (index->x <= ((j*130)+100)) && (index->y == (i*50+50))) {
+							index->shoked = 1;
+							o = board->map[i][j].entity;
+							if (o->life < 10) {
+								o->life--;
+							} else 
+								removeObstacle(j, i, board);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 int main(int argc, char** argv){
@@ -140,7 +175,7 @@ int main(int argc, char** argv){
 		return -3;
 	}
 
-	ship *player = ship_create(50, 0, 550, 500, X_SCREEN, Y_SCREEN);	
+	ship *player = ship_create(50, 0, 550, 650, X_SCREEN, Y_SCREEN);	
 	space *board = create_board(y, x, e);
 
 	ALLEGRO_EVENT event;																																												
@@ -158,10 +193,12 @@ int main(int argc, char** argv){
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 			} else {
 				update_position(player);	
-				check_kill(player, board);	
+				check_kill(player, board);
+				check_obstacle_collision(player, board);	
 				
 				al_draw_tinted_scaled_rotated_bitmap_region(shipIcon, 67, 0, 10, 20, al_map_rgba_f(1, 1, 1, 1), 0, 0, player->x, player->y, 5, 5, 0, 0);	
 				draw_enemies(board, shipIcon);
+				draw_obstacles(board, shipIcon);
 
 				for (bullet *index = player->gun->shots; index != NULL; index = (bullet*) index->next) {
 					al_draw_filled_circle((index->x+27), (index->y+10), 5, al_map_rgb(0, 0, 255));

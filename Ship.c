@@ -33,7 +33,6 @@ void ship_shot(ship *element){
 
 }
 
-
 void ship_destroy(ship *element){																
 	joystick_destroy(element->control);																											
 	free(element);																																

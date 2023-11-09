@@ -2,7 +2,7 @@ CFLAGS = -Wall -g
 LIBS = -lallegro -lallegro_main -lallegro_image -lallegro_font -lallegro_ttf -lallegro_primitives
 CC = gcc
 
-	objects =  Ship.o Joystick.o Pistol.o Bullet.o Enemy.o Space.o A4.o 
+	objects =  Ship.o Joystick.o Pistol.o Bullet.o Enemy.o Space.o Obstacle.o A4.o 
 
 A4: $(objects)
 	$(CC) $(CFLAGS) -o A4 $(objects) $(LIBS)
@@ -27,6 +27,9 @@ Enemy.o: Enemy.c
 
 Space.o: Space.c
 	$(CC) $(CFLAGS) -c Space.c
+
+Obstacle.o: Obstacle.c
+	$(CC) $(CFLAGS) -c Obstacle.c
 
 clean:
 	rm -rf $(objects)

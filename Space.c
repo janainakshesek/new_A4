@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "Space.h"
+#include "Obstacle.h"
 #include "Enemy.h"
 #include "Ship.h"
 
@@ -27,6 +28,13 @@ space* create_board(int max_y, int max_x, int enemy_lines){
 		for (int j = 0; j < max_x; j++) {
 			add_enemy(board, i, j, 1, 0, i);
 		}
+    
+    addObstacle(1, 8, board);
+    addObstacle(4, 8, board);
+    addObstacle(7, 8, board);
+    addObstacle(10, 8, board);
+
+
 	return board;
 }
 
