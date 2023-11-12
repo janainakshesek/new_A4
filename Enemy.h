@@ -3,6 +3,8 @@
 
 #include "Space.h"
 #include "Joystick.h"
+#include "Pistol.h"
+#include "Bullet.h"
 
 typedef struct shot shot;
 struct shot{
@@ -24,7 +26,11 @@ typedef struct enemy{
 	unsigned short y;	
 	unsigned char side;	
 	unsigned char face;		
-	joystick *control;		
+	joystick *control;	
+	int trajectory;	
+	int img;
+	int up;
+	pistol *gun;																									
 	enum {WEAK, INTERMEDIARY, STRONG} type;
 } enemy;
 
@@ -38,5 +44,7 @@ void update_shots(space *board, shot_sentinel *list);
 
 int add_enemy(space *board, int position_y, int position_x, int side, int face, int type);
 int remove_enemy(space *board, int position_y, int position_x);
+void update_enemies_position(space *board);
+void enemy_shot(enemy *element);
 
 #endif

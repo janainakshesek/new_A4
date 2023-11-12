@@ -1,7 +1,7 @@
 #ifndef __BULLET__ 																																//Guardas de inclusão (!)
 #define __BULLET__																																//Guardas de inclusão (!)
 
-#define BULLET_MOVE 5
+#define BULLET_MOVE 8
 
 typedef struct {																																//Definição da estrutura de um pŕojétil (!)
 	unsigned short x;																															//Local, no eixo x, onde se localiza a bala (!)

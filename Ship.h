@@ -14,7 +14,10 @@ typedef struct {
 	unsigned short y;		
 	pistol *gun;																									
 	joystick *control;	
-	int life;																										
+	int life;		
+	int score;		
+	int blinking;				
+	int blinkCounter;																		
 
 } ship;																														
 

@@ -11,7 +11,10 @@ ship* ship_create(unsigned char side, unsigned char face, unsigned short x, unsi
 	new_ship->face = face;																											
 	new_ship->x = x;																															
 	new_ship->y = y;			
-	new_ship->life = 3;																												
+	new_ship->life = 3;				
+	new_ship->score = 0;	
+	new_ship->blinking = 0;			
+	new_ship->blinkCounter = 0;																				
 	new_ship->control = joystick_create();	
 	new_ship->gun = pistol_create();																								
 	return new_ship;																														

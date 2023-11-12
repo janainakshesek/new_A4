@@ -37,10 +37,10 @@ space* create_board(int max_y, int max_x, int enemy_lines){
 		add_enemy(board, 3, j, 0, 0, 0);
 	}
     
-    addObstacle(1, 8, board);
-    addObstacle(4, 8, board);
-    addObstacle(7, 8, board);
-    addObstacle(10, 8, board);
+    addObstacle(1, 9, board);
+    addObstacle(4, 9, board);
+    addObstacle(7, 9, board);
+    addObstacle(10, 9, board);
 
 
 	return board;

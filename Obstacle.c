@@ -4,8 +4,8 @@
 void addObstacle(int x, int y, space *board) {
     obstacle *o = (obstacle*) malloc(sizeof(obstacle));
 
-    o->x = x;
-    o->y = y;
+    o->x = x*130;
+    o->y = y*50;
     o->life = 10;
 
     if (!board->map[y][x].entity) {
