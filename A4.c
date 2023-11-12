@@ -55,7 +55,11 @@ void update_bullets(ship *player){
 }
 
 void update_enemy_bullets(enemy *enemy){									
-	bullet *previous = NULL;																																											
+	bullet *previous = NULL;	
+
+  if (!enemy)
+    return;
+
 	for (bullet *index = enemy->gun->shots; index != NULL;){		
 		if (index->shoked) {
 			if (previous){																																													
@@ -202,7 +206,7 @@ unsigned char check_obstacle_collision(ship *player, space *board) {
 				if (board->map[i][j].entity) {
 					if (board->map[i][j].type == OBSTACLE) {
 						o = board->map[i][j].entity;	
-						if ((index->x >= (o->x-10)) && (index->x <= (o->x+100) && (index->y == (o->y+50)))) {
+						if ((index->x >= (o->x-100)) && (index->x <= (o->x+100) && (index->y >= (o->y-50) && (index->y <= o->y+50)))) {
 							index->shoked = 1;
 							if (o->life > 1) {
 								o->life--;
@@ -387,11 +391,25 @@ void draw_enemies_shots (space *board, ALLEGRO_BITMAP *image) {
 	}		
 }
 
+int count_enemies (space *board) {
+  int count = 0;
+
+  for (int i = 0; i < board->max_y; i++) {
+    for (int j = 0; j < board->max_x; j++) {
+      if (board->map[i][j].entity && board->map[i][j].type == ENEMY) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
 int main(int argc, char** argv){
 	int x = 11;
 	int y = 10;
 	int e = 4;
-	int started = 0, end = 0;
+	int started = 0, end = 0, enemies = -1;
 
 	al_init();																																															
 	al_init_image_addon();		
@@ -432,6 +450,7 @@ int main(int argc, char** argv){
 	al_start_timer(timer);	
 
 	char lifeText[20];
+	enemy *aux;
 
 	while(1){																																															
 		al_wait_for_event(queue, &event);
@@ -445,7 +464,9 @@ int main(int argc, char** argv){
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 			} else if (end) {
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
-			} else {
+			} else if (enemies == 0) {
+        al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "YOU WIN!"); 
+      } else {
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), X_SCREEN/2, 20, ALLEGRO_ALIGN_CENTER, lifeText);
 
@@ -462,9 +483,11 @@ int main(int argc, char** argv){
 				draw_enemies(board, shipIcon);
 				update_enemies_position(board);	
         verify_shots(board, player);
+        enemies = count_enemies(board);
 				
         draw_ship(player, shipIcon);
 				draw_obstacles(board, shipIcon, font);
+        draw_enemies_shots(board, shipIcon);
 
 				for (bullet *index = player->gun->shots; index != NULL; index = (bullet*) index->next) {
 					al_draw_filled_circle(index->x+27, index->y+30, 5, al_map_rgb(255, 0, 0));            
@@ -472,14 +495,13 @@ int main(int argc, char** argv){
 						player->gun->timer--; 	
 				}	
 
-				enemy *aux;
 				aux = closer(board, player);
 
-				if (!shot_screen(board))
-					enemy_shot(aux);
-
-        draw_enemies_shots(board, shipIcon);
-
+        if (aux) {
+          if (!shot_screen(board))
+				    enemy_shot(aux);
+        }
+         
 			}
 
 			al_flip_display();
