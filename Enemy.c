@@ -164,12 +164,19 @@ void enemy_shot(enemy *element) {
 
 	if (!element) return;
 
-	if (!valid_shot(element)) return;
-	else {
-    if (element->face == 0) 
-		shot = pistol_shot(element->x, element->y, 1, element->gun);							
-	if (shot)
-		 element->gun->shots = shot;
+	if (element->type == WEAK) {
+		if (!valid_shot(element)) return;
+		else {
+    		if (element->face == 0) 
+				shot = pistol_shot(element->x, element->y, 1, element->gun);							
+			if (shot)
+		 		element->gun->shots = shot;
+		}
+	} else {
+		if (element->face == 0) 
+				shot = pistol_shot(element->x, element->y, 1, element->gun);							
+			if (shot)
+		 		element->gun->shots = shot;
 	}
 
 }

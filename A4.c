@@ -239,7 +239,7 @@ int check_obstacle_enemy (space *board) {
 											  o->life--;
 										  } else 
 											  removeObstacle(j, i, board);
-									  } else if (aux->type == INTERMEDIARY && aux->type == STRONG) {
+									  } else if (aux->type == INTERMEDIARY || aux->type == STRONG) {
 										    if (o->life > 1) {
 											  o->life -= 2;
 										  } else 
@@ -512,7 +512,7 @@ int main(int argc, char** argv){
 			else if (event.keyboard.keycode == 83) joystick_right(player->control);																													
 			else if (event.keyboard.keycode == 84) joystick_up(player->control);																														
 			else if (event.keyboard.keycode == 85) joystick_down(player->control);		
-			else if (event.keyboard.keycode == 3) joystick_fire(player->control);	
+			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE) joystick_fire(player->control);	
 			
 		} else if (event.type == 42) break;																																								
 	}
