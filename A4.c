@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 	int x = 11;
 	int y = 10;
 	int e = 4;
-	int started = 0, end = 1, enemies = -1;
+	int started = 0, end = 1, enemies = -1, teste = 0;
 
 	al_init();																																															
 	al_init_image_addon();		
@@ -64,27 +64,41 @@ int main(int argc, char** argv){
 	al_start_timer(timer);	
 
     char lifeText[20];
+	space *board;
 
 	while(1){																																															
 		al_wait_for_event(queue, &event);
 
 		if (event.type == 30){
 			al_clear_to_color(al_map_rgb(0, 0, 0));	
-
+			
+			//Quando ainda não começou e não perdeu
 			if (!started && end == 1) {
 				al_draw_scaled_bitmap(gameIcon, 0, 0, 600, 600, 600, 200, 300, 300, 0);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 500, ALLEGRO_ALIGN_CENTER, "SPACE INVADERS");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
-			} else if (!end && started) {
+			} else if (started && (!end || end == -3))  {
 				started = 0;
-			} else if (!end && !started) {
+				teste = 0;
+			} else if (!started && !end) {
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
 			} else if (end == -3) {
-        		al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "YOU WIN!"); 
-      		} else {
-				end = create_cenary(player, shipIcon, font);     
+        		started = 1;
+				board = create_board(y, x, e);
+				teste = 1;
+				if (player->life < 5)
+					player->life++;
+      		} else if(started && end && !teste) {
+				board = create_board(y, x, e);
+				teste = 1;
+			} else if ( started && teste && (end || end == -3)) {
+				enemies = count_enemies(board);
+				if (enemies == 0)
+					end = -3;
+				end = check_ship_kill(player, board, shipIcon);
+				start_game(board, player, shipIcon, font);
 			}
 
 			al_flip_display();

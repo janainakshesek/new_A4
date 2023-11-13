@@ -27,6 +27,6 @@ void verify_shots (space *board, ship *player);
 void draw_enemies_shots (space *board, ALLEGRO_BITMAP *image);
 int count_enemies (space *board);
 int create_cenary (ship *player,  ALLEGRO_BITMAP *shipIcon, ALLEGRO_FONT *font);
-int start_game (space *board, ship *player, ALLEGRO_BITMAP *image, ALLEGRO_FONT *font);
+void start_game (space *board, ship *player, ALLEGRO_BITMAP *image, ALLEGRO_FONT *font);
 
 #endif 

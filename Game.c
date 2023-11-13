@@ -333,7 +333,7 @@ int check_ship_kill(ship *player, space *board, ALLEGRO_BITMAP *shipIcon) {
 
                                 draw_ship(player, shipIcon);
                             } else if (player->life == 1) {
-                                return 1;
+                                return 0;
                             }
                         }
                     }
@@ -341,7 +341,7 @@ int check_ship_kill(ship *player, space *board, ALLEGRO_BITMAP *shipIcon) {
             }
         }
     }
-  return 0;
+  return 1;
 }
 
 void verify_shots (space *board, ship *player) {
@@ -404,22 +404,9 @@ int count_enemies (space *board) {
   return count;
 }
 
-int create_cenary (ship *player,  ALLEGRO_BITMAP *shipIcon, ALLEGRO_FONT *font) {
-	int x = 11;
-	int y = 10;
-	int e = 4;
-	int aux = 1;
-	space *board = create_board(y, x, e);
-
-	while (aux) aux = start_game(board, player, shipIcon, font); 
-
-	return aux;
-}
-
-int start_game (space *board, ship *player, ALLEGRO_BITMAP *shipIcon, ALLEGRO_FONT *font) {
+void start_game (space *board, ship *player, ALLEGRO_BITMAP *shipIcon, ALLEGRO_FONT *font) {
     char lifeText[20];
 	enemy *aux;
-    int end = 0, enemies = -1;
 
     sprintf(lifeText, "SCORE: %d", player->score);
 	al_draw_text(font, al_map_rgb(154, 217, 65), X_SCREEN/2, 20, ALLEGRO_ALIGN_CENTER, lifeText);
@@ -433,10 +420,6 @@ int start_game (space *board, ship *player, ALLEGRO_BITMAP *shipIcon, ALLEGRO_FO
 	check_kill(player, board, shipIcon);
 	check_obstacle_collision(player, board);
     check_obstacle_enemy(board);
-	end = check_ship_kill(player, board, shipIcon);
-    if (end == 1) {
-        return 0;
-    }
 
 	draw_enemies(board, shipIcon);
 	update_enemies_position(board);	
@@ -454,12 +437,8 @@ int start_game (space *board, ship *player, ALLEGRO_BITMAP *shipIcon, ALLEGRO_FO
 
 	aux = closer(board, player);
 
-	enemies = count_enemies(board);
-	if (enemies == 0) return -3;
-
     if (aux) {
         if (!shot_screen(board))
 		    enemy_shot(aux);
     }
-    return 1;
 }
