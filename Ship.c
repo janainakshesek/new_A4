@@ -30,7 +30,7 @@ int valid (ship *element) {
 	bullet *aux = element->gun->shots;
 
 	while (aux) {
-		if (aux->x == element->x) return 0;
+		if (aux->x >= element->x-10 && aux->x <= element->x+10) return 0;
 		aux = (bullet*) aux->next;
 	}
 	return 1;
