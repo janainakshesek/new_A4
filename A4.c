@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 	int x = 11;
 	int y = 10;
 	int e = 4;
-	int started = 0, end = 1, enemies = -1, teste = 0;
+	int started = 0, end = 1, enemies = -1, teste = 0, create = 0;
 
 	al_init();																																															
 	al_init_image_addon();		
@@ -88,17 +88,16 @@ int main(int argc, char** argv){
 			} else if (end == -3) {
 				if (player->life < 5)
 					player->life++;
-        		enemies = count_enemies(board);
-				end = check_ship_kill(player, board, shipIcon);
-				if (enemies == 0)
-					end = -3;
-				start_game(board, player, shipIcon, font);
-				
-      		} else if(started && end && !teste) {
-				board = create_board(y, x, e);
+				create = 0;
+      		} else if(started && end && !teste && !create) {
 				player = ship_create(50, 0, X_SCREEN/2, 650, X_SCREEN, Y_SCREEN);
 				teste = 1;
-			} else if ( started && teste && (end || end == -3)) {
+				create = 1;
+			} else if (started && end && teste && create ) {
+				board = create_board(y, x, e);
+				create = 0;
+			}
+			else if ( started && teste && end && !create) { 
 				enemies = count_enemies(board);
 				end = check_ship_kill(player, board, shipIcon);
 				if (enemies == 0)
