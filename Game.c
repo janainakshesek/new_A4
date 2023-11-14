@@ -333,7 +333,7 @@ int check_ship_kill(ship *player, space *board, ALLEGRO_BITMAP *shipIcon) {
 
                                 draw_ship(player, shipIcon);
                             } else if (player->life == 1) {
-                                return 0;
+                                return 1;
                             }
                         }
                     }
@@ -341,7 +341,7 @@ int check_ship_kill(ship *player, space *board, ALLEGRO_BITMAP *shipIcon) {
             }
         }
     }
-  return 1;
+  return 0;
 }
 
 void verify_shots (space *board, ship *player) {

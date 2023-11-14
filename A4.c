@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 	int x = 11;
 	int y = 10;
 	int e = 4;
-	int started = 0, end = 1, enemies = -1, teste = 0;
+	int started = 0, end = 0, enemies = -1, working = 0, createBoard = 0, createPlayer = 0;
 
 	al_init();																																															
 	al_init_image_addon();		
@@ -73,32 +73,38 @@ int main(int argc, char** argv){
 			al_clear_to_color(al_map_rgb(0, 0, 0));	
 			
 			//Quando ainda não começou e não perdeu
-			if (!started && end == 1) {
+			if (!started && !end) {
 				al_draw_scaled_bitmap(gameIcon, 0, 0, 600, 600, 600, 200, 300, 300, 0);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 500, ALLEGRO_ALIGN_CENTER, "SPACE INVADERS");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
-			} else if (started && (!end || end == -3))  {
+
+			} else if (started && (end == 1 || end == -3) )  { //perdeu
 				started = 0;
-				teste = 0;
-			} else if (!started && !end && !teste) {
+				working = 0;
+
+			} else if (!started && end == 1 && !working) { //perdeu e pode jogar de novo
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
-			} else if (end == -3) {
+
+			} else if (end == -3 && !started && !working) { //ganhou
 				if (player->life < 5)
-					player->life++;
-        		enemies = count_enemies(board);
-				end = check_ship_kill(player, board, shipIcon);
-				if (enemies == 0)
-					end = -3;
-				start_game(board, player, shipIcon, font);
-				
-      		} else if(started && end && !teste) {
-				board = create_board(y, x, e);
+					player->life++;	
+				started = 1;
+				createBoard = 1;
+				createPlayer = 0;
+				end = 0;
+      		} else if(started && !end && !working && createPlayer) {
 				player = ship_create(50, 0, X_SCREEN/2, 650, X_SCREEN, Y_SCREEN);
-				teste = 1;
-			} else if ( started && teste && (end || end == -3)) {
+				createBoard = 1;
+				createPlayer = 0;
+			} else if (started && createBoard && !working && !end) {
+				board = create_board(y, x, e);
+				working = 1;
+				createBoard = 0;
+			} 
+			else if ( started && working && !end) {
 				enemies = count_enemies(board);
 				end = check_ship_kill(player, board, shipIcon);
 				if (enemies == 0)
@@ -109,12 +115,12 @@ int main(int argc, char** argv){
 			al_flip_display();
 
 		} else if ((event.type == 10) || (event.type == 12)){		
-			if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {started = 1; end = 1;}
-			else if (event.keyboard.keycode == 82) joystick_left(player->control);																													
-			else if (event.keyboard.keycode == 83) joystick_right(player->control);																													
-			else if (event.keyboard.keycode == 84) joystick_up(player->control);																														
-			else if (event.keyboard.keycode == 85) joystick_down(player->control);		
-			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE) joystick_fire(player->control);	
+			if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {started = 1; end = 0; createPlayer = 1;}
+			else if (event.keyboard.keycode == 82 && started) joystick_left(player->control);																													
+			else if (event.keyboard.keycode == 83 && started) joystick_right(player->control);																													
+			else if (event.keyboard.keycode == 84 && started) joystick_up(player->control);																														
+			else if (event.keyboard.keycode == 85 && started) joystick_down(player->control);		
+			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started) joystick_fire(player->control);	
 			
 		} else if (event.type == 42) break;																																								
 	}
