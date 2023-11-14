@@ -16,7 +16,8 @@ ship* ship_create(unsigned char side, unsigned char face, unsigned short x, unsi
 	new_ship->blinking = 0;			
 	new_ship->blinkCounter = 0;																				
 	new_ship->control = joystick_create();	
-	new_ship->gun = pistol_create();																								
+	new_ship->gun = pistol_create();
+	// new_ship->gun->timer = al_create_timer(1.0 / 10.0);																								
 	return new_ship;																														
 }
 

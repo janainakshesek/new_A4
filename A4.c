@@ -34,7 +34,10 @@ int main(int argc, char** argv){
 
 	ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);																																					
 	ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();																																				
-	ALLEGRO_FONT* font = al_create_builtin_font();																																						
+	ALLEGRO_FONT* font =  al_load_bitmap_font("./imgs/fixed_font.tga");	
+	if (!font) {
+      perror("Falha ao carregar fonte.\n");
+	}																																			
 	ALLEGRO_DISPLAY* disp = al_create_display(X_SCREEN, Y_SCREEN);																																		
 
 	al_register_event_source(queue, al_get_keyboard_event_source());																																	
@@ -86,7 +89,8 @@ int main(int argc, char** argv){
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
-				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
+				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 600, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
+				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ESC PARA SAIR");
 
 			} else if (end == -3 && !started && !working) { 
 				if (player->life < 5)
@@ -121,6 +125,7 @@ int main(int argc, char** argv){
 			else if (event.keyboard.keycode == 84 && started) joystick_up(player->control);																														
 			else if (event.keyboard.keycode == 85 && started) joystick_down(player->control);		
 			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started) joystick_fire(player->control);	
+			else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) break;
 			
 		} else if (event.type == 42) break;																																								
 	}
