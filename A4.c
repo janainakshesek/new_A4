@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 		return -3;
 	}
 
-	ship *player = ship_create(50, 0, X_SCREEN/2, 650, X_SCREEN, Y_SCREEN);	
+	ship *player;	
 
 	ALLEGRO_EVENT event;																																												
 	al_start_timer(timer);	
@@ -80,24 +80,29 @@ int main(int argc, char** argv){
 			} else if (started && (!end || end == -3))  {
 				started = 0;
 				teste = 0;
-			} else if (!started && !end) {
+			} else if (!started && !end && !teste) {
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
+				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 			} else if (end == -3) {
-        		started = 1;
-				board = create_board(y, x, e);
-				teste = 1;
 				if (player->life < 5)
 					player->life++;
+        		enemies = count_enemies(board);
+				end = check_ship_kill(player, board, shipIcon);
+				if (enemies == 0)
+					end = -3;
+				start_game(board, player, shipIcon, font);
+				
       		} else if(started && end && !teste) {
 				board = create_board(y, x, e);
+				player = ship_create(50, 0, X_SCREEN/2, 650, X_SCREEN, Y_SCREEN);
 				teste = 1;
 			} else if ( started && teste && (end || end == -3)) {
 				enemies = count_enemies(board);
+				end = check_ship_kill(player, board, shipIcon);
 				if (enemies == 0)
 					end = -3;
-				end = check_ship_kill(player, board, shipIcon);
 				start_game(board, player, shipIcon, font);
 			}
 
