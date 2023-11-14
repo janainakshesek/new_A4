@@ -82,13 +82,13 @@ int main(int argc, char** argv){
 				started = 0;
 				working = 0;
 
-			} else if (!started && end == 1 && !working) { //perdeu e pode jogar de novo
+			} else if (!started && end == 1 && !working) { 
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 
-			} else if (end == -3 && !started && !working) { //ganhou
+			} else if (end == -3 && !started && !working) { 
 				if (player->life < 5)
 					player->life++;	
 				started = 1;
