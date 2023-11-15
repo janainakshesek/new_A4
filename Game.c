@@ -179,7 +179,7 @@ void check_kill(ship *killer, space *board, ALLEGRO_BITMAP *shipIcon){
 				if (board->map[i][j].entity) {
 					if (board->map[i][j].type == ENEMY) {
 						aux = board->map[i][j].entity;
-						if ((index->x >= (aux->x-20)) && (index->x <= (aux->x+20)) && ((index->y >= aux->y) && (index->y <= aux->y+20))) {
+						if ((index->x >= (aux->x-25)) && (index->x <= (aux->x+30)) && ((index->y >= aux->y-20) && (index->y <= aux->y+20))) {
 							index->shoked = 1;
               				draw_explosion(aux->x, aux->y, shipIcon);
               				if (aux->type == WEAK)
@@ -205,7 +205,7 @@ void check_obstacle_collision(ship *player, space *board) {
 				if (board->map[i][j].entity) {
 					if (board->map[i][j].type == OBSTACLE) {
 						o = board->map[i][j].entity;	
-						if ((index->x >= (o->x-100)) && (index->x <= (o->x+100) && (index->y >= (o->y-50) && (index->y <= o->y+50)))) {
+						if ((index->x >= (o->x-30)) && (index->x <= (o->x+100) && (index->y >= (o->y-50) && (index->y <= o->y+50)))) {
 							index->shoked = 1;
 							if (o->life > 1) {
 								o->life--;
@@ -231,18 +231,18 @@ void check_obstacle_enemy (space *board) {
 							for (int l = 0; l < board->max_x; l++) {
 								if (board->map[k][l].entity && board->map[k][l].type == OBSTACLE) {
 									o = board->map[k][l].entity;
-								  if ((index->x >= (o->x-100)) && (index->x <= (o->x+100) && (index->y >= (o->y-50) && (index->y <= o->y+50)))) {
+								  if ((index->x >= (o->x-30)) && (index->x <= (o->x+100) && (index->y >= (o->y-50) && (index->y <= o->y+50)))) {
 									  index->shoked = 1;
 									  if (aux->type == WEAK) {
-										  if (o->life > 1) {
+										  	if (o->life > 1) {
 											  o->life--;
-										  } else 
-											  removeObstacle(j, i, board);
-									  } else if (aux->type == INTERMEDIARY || aux->type == STRONG) {
+										  	} else
+											  removeObstacle(l, k, board);
+										} else if (aux->type == INTERMEDIARY || aux->type == STRONG) {
 										    if (o->life > 1) {
 											  o->life -= 2;
-										  } else 
-											  removeObstacle(j, i, board);
+										  	} else 
+											  removeObstacle(l, k, board);
 									  }
 								  }
 								}
@@ -430,10 +430,11 @@ void start_game (space *board, ship *player, ALLEGRO_BITMAP *shipIcon, ALLEGRO_F
     draw_enemies_shots(board, shipIcon);
 
 	for (bullet *index = player->gun->shots; index != NULL; index = (bullet*) index->next) {
-	al_draw_filled_circle(index->x+27, index->y+30, 5, al_map_rgb(255, 0, 0));            
+		al_draw_filled_circle(index->x+27, index->y+30, 5, al_map_rgb(255, 0, 0));            
+	}	
+
 	if (player->gun->timer) 
 		player->gun->timer--; 	
-	}	
 
 	aux = closer(board, player);
 

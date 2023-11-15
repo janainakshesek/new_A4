@@ -3,7 +3,7 @@
 
 #include "Bullet.h"
 
-#define PISTOL_COOLDOWN 10	
+#define PISTOL_COOLDOWN 15	
 
 typedef struct {						
 	unsigned char timer;	

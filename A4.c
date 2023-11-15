@@ -75,16 +75,14 @@ int main(int argc, char** argv){
 		if (event.type == 30){
 			al_clear_to_color(al_map_rgb(0, 0, 0));	
 			
-			//Quando ainda não começou e não perdeu
 			if (!started && !end) {
 				al_draw_scaled_bitmap(gameIcon, 0, 0, 600, 600, 600, 200, 300, 300, 0);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 500, ALLEGRO_ALIGN_CENTER, "SPACE INVADERS");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 
-			} else if (started && (end == 1 || end == -3) )  { //perdeu
+			} else if (started && (end == 1 || end == -3) )  {
 				started = 0;
 				working = 0;
-
 			} else if (!started && end == 1 && !working) { 
 				sprintf(lifeText, "SCORE: %d", player->score);
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
@@ -105,6 +103,8 @@ int main(int argc, char** argv){
 				createPlayer = 0;
 			} else if (started && createBoard && !working && !end) {
 				board = create_board(y, x, e);
+				player->x = X_SCREEN/2;
+				player->y = 650;
 				working = 1;
 				createBoard = 0;
 			} 
@@ -125,18 +125,26 @@ int main(int argc, char** argv){
 			else if (event.keyboard.keycode == 84 && started) joystick_up(player->control);																														
 			else if (event.keyboard.keycode == 85 && started) joystick_down(player->control);		
 			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started) joystick_fire(player->control);	
-			else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) break;
+
+			else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+
+			clean_board(board);
+			destroy_board(board);
+			pistol_destroy(player->gun);
+			ship_destroy(player);
 			
-		} else if (event.type == 42) break;																																								
+			al_destroy_font(font);																																											
+			al_destroy_display(disp);																																											
+			al_destroy_timer(timer);																																										
+			al_destroy_event_queue(queue);	
+			al_destroy_bitmap(gameIcon);
+			al_destroy_bitmap(shipIcon);
+
+			break;
+			} 
+			
+		} else if (event.type == 42) break;																																				
 	}
-
-	// clean_board(board);
-	// destroy_board(board);
-
-	al_destroy_font(font);																																											
-	al_destroy_display(disp);																																											
-	al_destroy_timer(timer);																																										
-	al_destroy_event_queue(queue);		
 
 	return 0;
 }
