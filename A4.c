@@ -96,7 +96,7 @@ int main(int argc, char** argv){
 				started = 1;
 				createBoard = 1;
 				createPlayer = 0;
-				end = 0;
+			
       		} else if(started && !end && !working && createPlayer) {
 				player = ship_create(50, 0, X_SCREEN/2, 650, X_SCREEN, Y_SCREEN);
 				createBoard = 1;
