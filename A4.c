@@ -13,6 +13,7 @@
 
 #include <allegro5/allegro5.h>														
 #include <allegro5/allegro_font.h>	
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -28,16 +29,22 @@ int main(int argc, char** argv){
 
 	al_init();																																															
 	al_init_image_addon();		
-	al_init_primitives_addon();																																									
+	al_init_primitives_addon();		
+	al_init_font_addon();			
+	al_init_ttf_addon();																																				
 	
 	al_install_keyboard();																																												
 
 	ALLEGRO_TIMER* timer = al_create_timer(1.0 / 30.0);																																					
 	ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();																																				
-	ALLEGRO_FONT* font =  al_load_bitmap_font("./imgs/fixed_font.tga");	
+	ALLEGRO_FONT* font =  al_load_font("./font/8PXBUS.TTF", 20, 0);	
 	if (!font) {
       perror("Falha ao carregar fonte.\n");
-	}																																			
+	}						
+	ALLEGRO_FONT* title =  al_load_ttf_font("./font/8PXBUS.TTF", 70, 0);	
+	if (title) {
+      perror("Falha ao carregar fonte.\n");
+	}																																	
 	ALLEGRO_DISPLAY* disp = al_create_display(X_SCREEN, Y_SCREEN);																																		
 
 	al_register_event_source(queue, al_get_keyboard_event_source());																																	
@@ -78,7 +85,7 @@ int main(int argc, char** argv){
 			
 			if (!started && !end) {
 				al_draw_scaled_bitmap(gameIcon, 0, 0, 600, 600, 600, 200, 300, 300, 0);
-				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 500, ALLEGRO_ALIGN_CENTER, "SPACE INVADERS");
+				al_draw_text(title, al_map_rgb(154, 217, 65), 730, 500, ALLEGRO_ALIGN_CENTER, "SPACE INVADERS");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
 
 			} else if (started && (end == 1 || end == -3) )  {
@@ -86,10 +93,10 @@ int main(int argc, char** argv){
 				working = 0;
 			} else if (!started && end == 1 && !working) { 
 				sprintf(lifeText, "SCORE: %d", player->score);
-				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
+				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 50, ALLEGRO_ALIGN_CENTER, "APERTE DELETE PARA VOLTAR AO MENU");
+				al_draw_text(title, al_map_rgb(246, 0, 0), 730, 400, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
 				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 200, ALLEGRO_ALIGN_CENTER, lifeText);
-				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 600, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR");
-				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 700, ALLEGRO_ALIGN_CENTER, "APERTE ESC PARA SAIR");
+				al_draw_text(font, al_map_rgb(154, 217, 65), 730, 600, ALLEGRO_ALIGN_CENTER, "APERTE ENTER PARA JOGAR NOVAMENTE");
 
 			} else if (end == -3 && !started && !working) { 
 				if (player->life < 5)
@@ -134,7 +141,7 @@ int main(int argc, char** argv){
 			else if (event.keyboard.keycode == 84 && started && working) joystick_up(player->control);																														
 			else if (event.keyboard.keycode == 85 && started && working) joystick_down(player->control);		
 			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started && working) joystick_fire(player->control);	
-
+			else if (event.keyboard.keycode == ALLEGRO_KEY_DELETE) {started = 0; end = 0; }
 			else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
 
 			clean_board(board);
