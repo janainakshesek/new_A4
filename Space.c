@@ -4,6 +4,7 @@
 #include "Obstacle.h"
 #include "Enemy.h"
 #include "Ship.h"
+#include "Pistol.h"
 
 // Biblioteca que cria e gerencia um tabuleiro dado seu tamanho
 // O tabuleiro tem índices [0,X+1] e [0,Y+1] - ou seja, tamanho, em linhas, de X+2; e em colunas, de Y+2,
@@ -50,6 +51,10 @@ void clean_board(space *board){
 	for (int i = 0; i <= board->max_y; i++){
 		for (int j = 0; j <= board->max_x; j++){
 			if (!board->map[i][j].entity) continue;
+			if (board->map[i][j].type == ENEMY) {
+				pistol_destroy(((enemy*) board->map[i][j].entity)->gun);
+				joystick_destroy(((enemy*) board->map[i][j].entity)->control);
+			}
 			free(board->map[i][j].entity);
 			board->map[i][j].entity = NULL;
 		}

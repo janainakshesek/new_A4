@@ -3,7 +3,7 @@
 
 typedef struct {
 	void *entity;
-	enum {ENEMY, OBSTACLE, SHIP} type;
+	enum {ENEMY, OBSTACLE} type;
 } sqm;
 
 typedef struct {
