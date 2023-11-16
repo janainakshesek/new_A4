@@ -68,6 +68,7 @@ int main(int argc, char** argv){
 
     char lifeText[20];
 	space *board;
+	bullet *aux;
 
 	while(1){																																															
 		al_wait_for_event(queue, &event);
@@ -93,7 +94,16 @@ int main(int argc, char** argv){
 			} else if (end == -3 && !started && !working) { 
 				if (player->life < 5)
 					player->life++;	
+				aux = player->gun->shots;
+				while (aux) {
+					if (aux->y > 0) 
+						aux->y = 0;
+					aux = (bullet*) aux->next;
+				}
+				player->x = X_SCREEN/2;
+				player->y = 650;
 				started = 1;
+				end = 0;
 				createBoard = 1;
 				createPlayer = 0;
 			
@@ -103,8 +113,7 @@ int main(int argc, char** argv){
 				createPlayer = 0;
 			} else if (started && createBoard && !working && !end) {
 				board = create_board(y, x, e);
-				player->x = X_SCREEN/2;
-				player->y = 650;
+
 				working = 1;
 				createBoard = 0;
 			} 
@@ -120,11 +129,11 @@ int main(int argc, char** argv){
 
 		} else if ((event.type == 10) || (event.type == 12)){		
 			if (event.keyboard.keycode == ALLEGRO_KEY_ENTER) {started = 1; end = 0; createPlayer = 1;}
-			else if (event.keyboard.keycode == 82 && started) joystick_left(player->control);																													
-			else if (event.keyboard.keycode == 83 && started) joystick_right(player->control);																													
-			else if (event.keyboard.keycode == 84 && started) joystick_up(player->control);																														
-			else if (event.keyboard.keycode == 85 && started) joystick_down(player->control);		
-			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started) joystick_fire(player->control);	
+			else if (event.keyboard.keycode == 82 && started && working) joystick_left(player->control);																													
+			else if (event.keyboard.keycode == 83 && started && working) joystick_right(player->control);																													
+			else if (event.keyboard.keycode == 84 && started && working) joystick_up(player->control);																														
+			else if (event.keyboard.keycode == 85 && started && working) joystick_down(player->control);		
+			else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE && started && working) joystick_fire(player->control);	
 
 			else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
 
